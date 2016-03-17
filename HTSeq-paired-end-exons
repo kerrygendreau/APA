@@ -10,9 +10,18 @@ for almnt in almnt_file:
    if not almnt.aligned:
       count[ "_unmapped" ] += 1
       continue
+      
+      
    gene_ids = set()
-   for iv, val in features[ almnt.iv ].steps():
-      gene_ids |= val
+   for cigop in almnt.cigar:
+      if cigop.type != "M":
+         continue
+      for iv, val in features[ cigop.ref_iv ].steps():
+         gene_ids |= val
+      
+      
+      
+      
    if len(gene_ids) == 1:
       gene_id = list(gene_ids)[0]
       counts[ gene_id ] += 1
