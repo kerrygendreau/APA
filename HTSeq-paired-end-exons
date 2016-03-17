@@ -5,23 +5,20 @@ gtf_file = HTSeq.GFF_Reader( "mm9_knowngene.gff3" )
 features =  HTSeq.GenomicArrayOfSets( "auto", stranded=True )
 counts = collections.Counter( )
 
-almnt_file = HTSeq.SAM_Reader( "my_alignments.sam" )
-for almnt in almnt_file:
-   if not almnt.aligned:
+almnt_file = HTSeq.SAM_Reader( "my_paired_alignments.sam" )
+counts = collections.Counter( )
+for bundle in HTSeq.pair_SAM_alignments( almnt_file, bundle=True ):
+   if len(bundle) != 1
+      continue  # Skip multiple alignments
+   first_almnt, second_almnt = bundle[0]  # extract pair
+   if not first_almnt.aligned and second_almnt.aligned:
       count[ "_unmapped" ] += 1
       continue
-      
-      
    gene_ids = set()
-   for cigop in almnt.cigar:
-      if cigop.type != "M":
-         continue
-      for iv, val in features[ cigop.ref_iv ].steps():
-         gene_ids |= val
-      
-      
-      
-      
+   for iv, val in features[ left_almnt.iv ].steps():
+      gene_ids |= val
+   for iv, val in features[ right_almnt.iv ].steps():
+      gene_ids |= val
    if len(gene_ids) == 1:
       gene_id = list(gene_ids)[0]
       counts[ gene_id ] += 1
