@@ -5,6 +5,11 @@ gtf_file = HTSeq.GFF_Reader( "mm9_knowngene.gff3" )
 features =  HTSeq.GenomicArrayOfSets( "auto", stranded=True )
 counts = collections.Counter( )
 
+for line in open( "myfeatures.txt" ):
+   fields = line.split( "\t" )
+   iv = HTSeq.GenomicInterval( fields[1], int(fields[2]), int(fields[3]) )
+   features[ iv ] += fields[0]
+
 almnt_file = HTSeq.SAM_Reader( "my_paired_alignments.sam" )
 counts = collections.Counter( )
 for bundle in HTSeq.pair_SAM_alignments( almnt_file, bundle=True ):
