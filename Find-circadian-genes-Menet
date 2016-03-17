@@ -1,0 +1,68 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 14 09:58:32 2016
+
+@author: kerrygendreau
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 11 15:45:20 2016
+
+@author: kerrygendreau
+"""
+
+
+
+#!/usr/bin/python
+
+
+
+from collections import defaultdict
+import csv
+
+
+
+
+def find_circadian_genes(rhythmic_apa_list, circadian_file, output_file):
+    
+    
+    
+
+    Rhythmic_APA = []    
+    Rhythmic_APA_Menet = {}
+    circadian_expression = []
+    Final_dict = {}
+
+
+    #Open Rhythmic APA file list and read in column 0 as list.
+    #Set list as keys.
+
+    for line in open(rhythmic_apa_list):
+        fields = line.strip('\n').split('\t')
+        gene_symbol = fields[0]
+        Rhythmic_APA.append(gene_symbol)
+
+
+    #Open Hughes file and read in column 5 as list.
+
+    for line in open(circadian_file):
+        fields = line.strip('\n').split('\t')
+        gene_symbol = fields[0]
+        circadian_expression = fields[37]
+        Rhythmic_APA_Menet[gene_symbol] = circadian_expression
+
+
+
+    #Look for rhythmic APA genes with circadian expression
+    
+        with open(output_file, 'w') as z: 
+            writer = csv.writer(z,delimiter='\t')
+            for item in Rhythmic_APA:
+                for key,value in Rhythmic_APA_Menet.iteritems():
+                    if item == key:
+                        writer.writerow([key, value])
+                    
+                    
+              
+find_circadian_genes("Rhythmic_APA_list.txt","Menet_RNAseq.txt","Rhythmic_APA_Menet.txt")
