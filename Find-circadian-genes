@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 11 15:45:20 2016
+
+@author: kerrygendreau
+
+
+"""
+
+
+
+#!/usr/bin/python
+
+
+
+from collections import defaultdict
+import csv
+
+
+
+
+def find_circadian_genes(rhythmic_apa_list, circadian_file, output_file):
+    
+    
+    
+    Rhythmic_APA = []
+    Hughes_circadian_list = []
+    Rhythmic_APA_Hughes = {}
+
+
+    #Open Rhythmic APA file list and read in column 0 as list.
+    #Set list as keys.
+
+    for line in open(rhythmic_apa_list):
+        fields = line.strip('\n').split('\t')
+        gene_symbol = fields[0]
+        Rhythmic_APA.append(gene_symbol)
+
+
+    #Open Hughes file and read in column 5 as list.
+
+    for line in open(circadian_file):
+        fields = line.strip('\n').split('\t')
+        gene_symbol = fields[0]
+        Hughes_circadian_list.append(gene_symbol)
+
+
+
+    #Look for rhythmic APA genes with circadian expression
+    
+    for item in Rhythmic_APA:
+        if item in Hughes_circadian_list:
+    
+        #append "yes" to key
+            Rhythmic_APA_Hughes[item] = 'yes'
+            print item
+    
+        else:
+            #append "no" to key
+            Rhythmic_APA_Hughes[item] = 'no'
+        
+        
+    #print Rhythmic_APA as dictionary
+    with open(output_file, 'w') as z:
+        writer = csv.writer(z,delimiter='\t')
+        for key, value in Rhythmic_APA_Hughes.iteritems():
+            writer.writerow([key, value])
+
+              
+find_circadian_genes("Rhythmic_APA_list.txt","Kojima_polyA_rhythmic.txt","Rhythmic_APA_Kojima_polyA.txt")
