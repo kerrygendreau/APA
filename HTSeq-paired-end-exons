@@ -1,0 +1,25 @@
+import HTSeq
+import collections
+
+gtf_file = HTSeq.GFF_Reader( "mm9_knowngene.gff3" )
+features =  HTSeq.GenomicArrayOfSets( "auto", stranded=True )
+counts = collections.Counter( )
+
+almnt_file = HTSeq.SAM_Reader( "my_alignments.sam" )
+for almnt in almnt_file:
+   if not almnt.aligned:
+      count[ "_unmapped" ] += 1
+      continue
+   gene_ids = set()
+   for iv, val in features[ almnt.iv ].steps():
+      gene_ids |= val
+   if len(gene_ids) == 1:
+      gene_id = list(gene_ids)[0]
+      counts[ gene_id ] += 1
+   elif len(gene_ids) == 0:
+      counts[ "_no_feature" ] += 1
+   else:
+      counts[ "_ambiguous" ] += 1
+
+for gene_id in counts:
+   print gene_id, counts[ gene_id ]
